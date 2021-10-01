@@ -115,10 +115,14 @@ class MANN(nn.Module):
         preds = preds[:,self.samples_per_class:,:,:]
         labels = labels[:,self.samples_per_class:,:,:]
 
-        preds = preds.reshape(batch_size, -1, self.num_classes)       
-        labels = labels.argmax(dim=3).reshape(batch_size, -1)
+        # preds = preds.reshape(batch_size, -1, self.num_classes)       
+        # labels = labels.argmax(dim=3).reshape(batch_size, -1)
+
+        preds = preds.reshape(batch_size * self.num_classes, -1)       
+        labels = labels.argmax(dim=3).reshape(batch_size * self.num_classes)
 
         # Compute cross entropy loss
+        # loss = F.cross_entropy(preds, labels)
         loss = F.cross_entropy(preds, labels)
 
         return loss
