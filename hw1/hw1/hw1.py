@@ -165,7 +165,7 @@ def main(config):
     model = MANN(config.num_classes, config.num_samples, 
                  model_size=config.model_size)
     model.to(device)
-    optim = torch.optim.Adam(model.parameters(), lr = 1e-3)
+    optim = torch.optim.Adam(model.parameters(), lr = config.learning_rate)
     
     for step in range(config.training_steps):
         images, labels = data_generator.sample_batch('train', config.meta_batch_size)
@@ -198,4 +198,5 @@ if __name__=='__main__':
     parser.add_argument('--training_steps', type=int, default=10000)
     parser.add_argument('--log_every', type=int, default=100)
     parser.add_argument('--model_size', type=int, default=128)
+    parser.add_argument('--learning_rate', type=int, default=1e-3)
     main(parser.parse_args())
