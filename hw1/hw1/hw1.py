@@ -200,6 +200,6 @@ if __name__=='__main__':
     parser.add_argument('--training_steps', type=int, default=10000)
     parser.add_argument('--log_every', type=int, default=100)
     parser.add_argument('--model_size', type=int, default=128)
-    parser.add_argument('--learning_rate', type=int, default=1e-3)
+    parser.add_argument('--learning_rate', type=float, default=1e-3)
     parser.add_argument('--use_dnc', action='store_true', default=1e-3)
     main(parser.parse_args())
