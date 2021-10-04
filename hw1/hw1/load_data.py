@@ -171,6 +171,7 @@ class DataGenerator(object):
             images.append(batch_images)
             labels.append(batch_labels)
 
+        # Convert to tensor
         images = torch.tensor(np.stack(images), dtype=torch.float32, device=self.device)
         labels = torch.tensor(np.stack(labels), dtype=torch.float32, device=self.device)
         

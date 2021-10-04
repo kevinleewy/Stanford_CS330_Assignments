@@ -13,7 +13,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 class MANN(nn.Module):
 
-    def __init__(self, num_classes, samples_per_class, model_size=128, input_size=784):
+    def __init__(self, num_classes, samples_per_class, model_size=128, input_size=784, use_dnc=False):
         super(MANN, self).__init__()
         
         def initialize_weights(model):
@@ -24,6 +24,7 @@ class MANN(nn.Module):
         self.num_classes = num_classes
         self.samples_per_class = samples_per_class
         self.input_size = input_size
+        self.use_dnc = use_dnc
         self.layer1 = torch.nn.LSTM(num_classes + input_size, 
                                     model_size, 
                                     batch_first=True)
@@ -81,8 +82,12 @@ class MANN(nn.Module):
         # Flatten K and N dim
         x = x.reshape((batch_size, -1, dim_input + self.num_classes))#.double()
 
-        out, _ = self.layer1(x)
-        out, _ = self.layer2(out)
+        # Get model predictions
+        if self.use_dnc:
+            out, _ = self.dnc(x)
+        else:
+            out, _ = self.layer1(x)
+            out, _ = self.layer2(out)
 
         # Reshape output
         out = out.reshape((batch_size, self.samples_per_class + 1, self.num_classes, self.num_classes))
@@ -115,14 +120,10 @@ class MANN(nn.Module):
         preds = preds[:,self.samples_per_class:,:,:]
         labels = labels[:,self.samples_per_class:,:,:]
 
-        # preds = preds.reshape(batch_size, -1, self.num_classes)       
-        # labels = labels.argmax(dim=3).reshape(batch_size, -1)
-
         preds = preds.reshape(batch_size * self.num_classes, -1)       
         labels = labels.argmax(dim=3).reshape(batch_size * self.num_classes)
 
         # Compute cross entropy loss
-        # loss = F.cross_entropy(preds, labels)
         loss = F.cross_entropy(preds, labels)
 
         return loss
@@ -163,7 +164,8 @@ def main(config):
 
     # Create model and optimizer
     model = MANN(config.num_classes, config.num_samples, 
-                 model_size=config.model_size)
+                 model_size=config.model_size,
+                 use_dnc=config.use_dnc)
     model.to(device)
     optim = torch.optim.Adam(model.parameters(), lr = config.learning_rate)
     
@@ -199,4 +201,5 @@ if __name__=='__main__':
     parser.add_argument('--log_every', type=int, default=100)
     parser.add_argument('--model_size', type=int, default=128)
     parser.add_argument('--learning_rate', type=int, default=1e-3)
+    parser.add_argument('--use_dnc', action='store_true', default=1e-3)
     main(parser.parse_args())
