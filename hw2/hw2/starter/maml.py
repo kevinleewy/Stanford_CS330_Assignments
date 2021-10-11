@@ -179,6 +179,29 @@ class MAML:
         # Use F.cross_entropy to compute classification losses.
         # Use util.score to compute accuracies.
 
+        for i in range(self._num_inner_steps + 1):
+
+            logits = self._forward(images, parameters)
+
+            # Compute loss
+            loss = F.cross_entropy(input=logits, target=labels, reduction='mean')
+
+            # Compute accuracies
+            accuracy = util.score(logits=logits, labels=labels)
+
+            # Append accuracy
+            accuracies.append(accuracy)
+
+            if train and i != self._num_inner_steps:
+                # Compute gradients
+                gradients = torch.autograd.grad(loss, parameters.values(), create_graph=True)
+
+                # Update parameters
+                for k, gradient in zip(parameters.keys(), gradients):
+                    parameters[k] -= self._inner_lrs[k] * gradient
+
+        assert len(accuracies) == self._num_inner_steps + 1
+
         # ********************************************************
         # ******************* YOUR CODE HERE *********************
         # ********************************************************
@@ -218,6 +241,22 @@ class MAML:
             # Use util.score to compute accuracies.
             # Make sure to populate outer_loss_batch, accuracies_support_batch,
             # and accuracy_query_batch.
+
+            _, accuracies_support_task = self._inner_loop(images_support, labels_support, train=train)
+
+            # Compute logits for query images
+            logits = self._forward(images_query, self._meta_parameters)
+
+            # Compute loss
+            loss = F.cross_entropy(input=logits, target=labels_query, reduction='mean')
+
+            # Compute query accuracy
+            accuracy_query_task = util.score(logits=logits, labels=labels_query)
+
+            # Append task statistics
+            outer_loss_batch.append(loss)
+            accuracies_support_batch.append(accuracies_support_task)
+            accuracy_query_batch.append(accuracy_query_task)
 
             # ********************************************************
             # ******************* YOUR CODE HERE *********************
