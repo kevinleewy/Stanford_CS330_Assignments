@@ -192,13 +192,17 @@ class MAML:
             # Append accuracy
             accuracies.append(accuracy)
 
-            if train and i != self._num_inner_steps:
+            if i != self._num_inner_steps:
                 # Compute gradients
-                gradients = torch.autograd.grad(loss, parameters.values(), create_graph=True)
+                gradients = torch.autograd.grad(loss, parameters.values(), create_graph=train)
 
                 # Update parameters
                 for k, gradient in zip(parameters.keys(), gradients):
-                    parameters[k] -= self._inner_lrs[k] * gradient
+
+                    # Note: If instead `parameters[k] -= self._inner_lrs[k] * gradient`
+                    # we run into the following error:
+                    # RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation: [torch.FloatTensor [64, 5]], which is output 0 of TBackward, is at version 1; expected version 0 instead. Hint: enable anomaly detection to find the operation that failed to compute its gradient, with torch.autograd.set_detect_anomaly(True).
+                    parameters[k] = parameters[k] - self._inner_lrs[k] * gradient
 
         assert len(accuracies) == self._num_inner_steps + 1
 
@@ -242,10 +246,10 @@ class MAML:
             # Make sure to populate outer_loss_batch, accuracies_support_batch,
             # and accuracy_query_batch.
 
-            _, accuracies_support_task = self._inner_loop(images_support, labels_support, train=train)
+            parameters, accuracies_support_task = self._inner_loop(images_support, labels_support, train=train)
 
             # Compute logits for query images
-            logits = self._forward(images_query, self._meta_parameters)
+            logits = self._forward(images_query, parameters)
 
             # Compute loss
             loss = F.cross_entropy(input=logits, target=labels_query, reduction='mean')
