@@ -1,0 +1,21 @@
+MuJoCo Pro Lab license activation key, number 7716, type 6.
+
+Issued to CS330, Prof. Finn, Stanford.
+
+Expires December 31, 2021.
+
+Do not share this file with anyone other than the users covered
+by your license agreement with Roboti LLC. This file activates
+MuJoCo Pro on any computer running any supported OS.
+
+Do not modify this file. Its entire content, including the
+plain text section, is used by the activation manager.
+
+977b770a3f3f4ff4c4620d8f15ad53278d4c97acbfc50bee70f0184ff5b87d46
+7e3493ce8b90b6266550c7565dea7dd7a27075dd34797e8ed7bc13be1a679dec
+d282a77f7cb6d1ca2ff327a99dace372efaa474f1a5bdcb6334ea9e091979547
+78f9a87247dbc8420aae46d7729c8313e848b708f6b1925336ef7f7e0154b257
+0345aab4057c6c52a3759086d5ca47b79517395b4d8edfcf0f3ca93d9b7a17d6
+32831c4cbe1ada0a0bc3371053ec9e28492547ff1d0d8f93f0fb061857851bd9
+64d4913dac0c0c3f3f545be6f1188e757a3356ca6ab07402e5751b7508b35834
+6a07088ce8a02e2f03ecf202ac2d36438ec4af949f6cf8a792668ed6c1c33e9a
