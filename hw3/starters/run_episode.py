@@ -35,24 +35,37 @@ def run_episode(
     for _ in range(steps_per_episode):
 
         # ======================== TODO modify code ========================
-        pass
+        # pass
 
         # append goal state to input, and prepare for feeding to the q-network
+        inputs = torch.cat(state, goal_state)
+        print('s', inputs.size(), state.size(), goal_state.size())
 
         # forward pass to find action
+        q_values = q_net(inputs)
+        action = torch.argmax(q_values)
+        print('a', q_values, action)
 
         # take action, use env.step
+        next_state, reward, done, info = env.step(action)
 
         # add transition to episode_experience as a tuple of
         # (state, action, reward, next_state, goal)
+        episode_experience.append((state, action, reward, next_state, goal_state))
 
         # update episodic return
+        episodic_return += reward
+        print('r', reward, episodic_return)
 
         # update state
+        state = next_state
 
         # update succeeded bool from the info returned by env.step
+        succeeded = info["successful_this_state"]
 
         # break the episode if done=True
+        if done:
+            break
 
         # ========================      END TODO       ========================
 
