@@ -39,7 +39,7 @@ def run_episode(
 
         # append goal state to input, and prepare for feeding to the q-network
         # print('s', state.shape, goal_state.shape)
-        inputs = np.concatenate((state, goal_state))
+        inputs = np.concatenate((state, goal_state), dtype=np.float32)
         inputs = torch.tensor(inputs)
         # print('x', inputs.size())
 
