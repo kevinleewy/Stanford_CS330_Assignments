@@ -45,7 +45,7 @@ def run_episode(
 
         # forward pass to find action
         q_values = q_net(inputs)
-        action = torch.argmax(q_values)
+        action = np.argmax(q_values.numpy())
         # print('a', q_values, action)
 
         # take action, use env.step
