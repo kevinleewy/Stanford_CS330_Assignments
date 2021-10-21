@@ -51,16 +51,16 @@ def update_replay_buffer(
             # pass
 
             # get final goal
-            _, _, _, _, final_goal = episode_experience[-1]
+            _, _, _, _, new_goal = episode_experience[-1]
 
             # compute new reward
-            reward = env_reward_function(state, final_goal)
+            new_reward = env_reward_function(state, new_goal)
 
             # add to buffer
-            replay_buffer.add(np.append(state, final_goal),
+            replay_buffer.add(np.append(state, new_goal),
                           action,
-                          reward,
-                          np.append(next_state, final_goal))
+                          new_reward,
+                          np.append(next_state, new_goal))
 
         elif her_type == HERType.FUTURE:
             # future: relabel episode based on randomly sampled future state.
@@ -73,16 +73,16 @@ def update_replay_buffer(
 
                 # get random future goal
                 future_index = np.random.randint(timestep, len(episode_experience))
-                _, _, _, _, future_goal = episode_experience[future_index]
+                _, _, _, _, new_goal = episode_experience[future_index]
 
                 # compute new reward
-                reward = env_reward_function(state, future_goal)
+                new_reward = env_reward_function(state, new_goal)
 
                 # add to replay buffer
-                replay_buffer.add(np.append(state, future_goal),
+                replay_buffer.add(np.append(state, new_goal),
                           action,
-                          reward,
-                          np.append(next_state, future_goal))
+                          new_reward,
+                          np.append(next_state, new_goal))
 
         elif her_type == HERType.RANDOM:
             # random: relabel episode based on a random state from the episode
@@ -93,16 +93,18 @@ def update_replay_buffer(
 
                 # get random goal
                 rand_index = np.random.randint(0, len(episode_experience))
-                _, _, _, _, random_goal = episode_experience[rand_index]
+                _, _, _, _, new_goal = episode_experience[rand_index]
 
                 # compute new reward
-                reward = env_reward_function(state, random_goal)
+                new_reward = env_reward_function(state, new_goal)
 
                 # add to replay buffer
-                replay_buffer.add(np.append(state, random_goal),
+                replay_buffer.add(np.append(state, new_goal),
                           action,
-                          reward,
-                          np.append(next_state, random_goal))
+                          new_reward,
+                          np.append(next_state, new_goal))
+
+        print(her_type, state, action, reward, next_state, goal, new_reward, new_goal)
 
         # ========================      END TODO       ========================
 
