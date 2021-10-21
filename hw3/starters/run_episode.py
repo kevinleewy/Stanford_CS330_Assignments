@@ -44,8 +44,8 @@ def run_episode(
         # print('x', inputs.size())
 
         # forward pass to find action
-        q_values = q_net(inputs)
-        action = np.argmax(q_values.numpy())
+        q_values = q_net(inputs).detach().numpy()
+        action = np.argmax(q_values)
         # print('a', q_values, action)
 
         # take action, use env.step
