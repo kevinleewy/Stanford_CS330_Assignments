@@ -38,15 +38,12 @@ def run_episode(
         # pass
 
         # append goal state to input, and prepare for feeding to the q-network
-        # print('s', state.shape, goal_state.shape)
         inputs = np.concatenate((state, goal_state), dtype=np.float32)
         inputs = torch.tensor(inputs)
-        # print('x', inputs.size())
 
         # forward pass to find action
         q_values = q_net(inputs).detach().numpy()
         action = np.argmax(q_values)
-        # print('a', q_values, action)
 
         # take action, use env.step
         next_state, reward, done, info = env.step(action)
@@ -57,7 +54,6 @@ def run_episode(
 
         # update episodic return
         episodic_return += reward
-        # print('r', reward, episodic_return)
 
         # update state
         state = next_state

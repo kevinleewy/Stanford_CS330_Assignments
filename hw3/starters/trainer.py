@@ -104,7 +104,6 @@ def update_replay_buffer(
                           new_reward,
                           np.append(next_state, new_goal))
 
-        # print(her_type, state, action, reward, next_state, goal, new_reward, new_goal)
 
         # ========================      END TODO       ========================
 
