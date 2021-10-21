@@ -51,7 +51,7 @@ def update_replay_buffer(
             # pass
 
             # get final goal
-            _, _, _, _, new_goal = episode_experience[-1]
+            _, _, _, new_goal, _ = episode_experience[-1]
 
             # compute new reward
             new_reward = env_reward_function(state, new_goal)
@@ -73,7 +73,7 @@ def update_replay_buffer(
 
                 # get random future goal
                 future_index = np.random.randint(timestep, len(episode_experience))
-                _, _, _, _, new_goal = episode_experience[future_index]
+                _, _, _, new_goal, _ = episode_experience[future_index]
 
                 # compute new reward
                 new_reward = env_reward_function(state, new_goal)
@@ -93,7 +93,7 @@ def update_replay_buffer(
 
                 # get random goal
                 rand_index = np.random.randint(0, len(episode_experience))
-                _, _, _, _, new_goal = episode_experience[rand_index]
+                _, _, _, new_goal, _ = episode_experience[rand_index]
 
                 # compute new reward
                 new_reward = env_reward_function(state, new_goal)
@@ -104,7 +104,7 @@ def update_replay_buffer(
                           new_reward,
                           np.append(next_state, new_goal))
 
-        print(her_type, state, action, reward, next_state, goal, new_reward, new_goal)
+        # print(her_type, state, action, reward, next_state, goal, new_reward, new_goal)
 
         # ========================      END TODO       ========================
 
