@@ -38,8 +38,9 @@ def run_episode(
         # pass
 
         # append goal state to input, and prepare for feeding to the q-network
-        inputs = torch.cat(state, goal_state)
-        print('s', inputs.size(), state.size(), goal_state.size())
+        inputs = np.concatenate(state, goal_state)
+        inputs = torch.tensor(inputs)
+        print('s', inputs.size(), state.shape, goal_state.shape)
 
         # forward pass to find action
         q_values = q_net(inputs)
